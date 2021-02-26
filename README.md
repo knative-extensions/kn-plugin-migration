@@ -60,16 +60,16 @@ Available Commands:
 
 ### Step 1 Execute migrate command
 
-![Step 1 Execute migrate command](doc/step1.png)
+![Step 1 Execute migrate command](docs/step1.png)
 
 ### Step 2 Migrate first service with revisions
 
-![Step 2 Migrate first service with revisions](doc/step2.png)
+![Step 2 Migrate first service with revisions](docs/step2.png)
 
 ### Step 3 Migrate next service with revisions
 
-![Step 3 Migrate next service with revisions](doc/step3.png)
+![Step 3 Migrate next service with revisions](docs/step3.png)
 
 ### Step 4 Clean kn resources with --delete
 
-![Step 4 Clean kn resources with --delete](doc/step4.png)
+![Step 4 Clean kn resources with --delete](docs/step4.png)
