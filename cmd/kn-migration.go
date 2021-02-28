@@ -17,7 +17,7 @@ import (
 	"fmt"
 	"os"
 
-	"knative.dev/client-contrib/plugins/migration/core"
+	"knative.dev/kn-plugin-migration/core"
 )
 
 func main() {

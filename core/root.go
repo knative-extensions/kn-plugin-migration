@@ -19,9 +19,9 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"knative.dev/client-contrib/plugins/migration/pkg/command"
-	"knative.dev/client-contrib/plugins/migration/pkg/command/list"
-	"knative.dev/client-contrib/plugins/migration/pkg/command/migrate"
+	"knative.dev/kn-plugin-migration/pkg/command"
+	"knative.dev/kn-plugin-migration/pkg/command/list"
+	"knative.dev/kn-plugin-migration/pkg/command/migrate"
 
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"

@@ -1,5 +1,5 @@
 /*
-Copyright 2019 The Knative Authors.
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package v1alpha1
 import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"knative.dev/pkg/apis"
-	duckv1 "knative.dev/pkg/apis/duck/v1"
 )
 
 const (
@@ -31,6 +30,12 @@ const (
 var condSet = apis.NewLivingConditionSet(
 	MetricConditionReady,
 )
+
+// GetConditionSet retrieves the condition set for this resource.
+// Implements the KRShaped interface.
+func (*Metric) GetConditionSet() apis.ConditionSet {
+	return condSet
+}
 
 // GetGroupVersionKind implements OwnerRefable.
 func (m *Metric) GetGroupVersionKind() schema.GroupVersionKind {
@@ -62,12 +67,10 @@ func (ms *MetricStatus) MarkMetricFailed(reason, message string) {
 	condSet.Manage(ms).MarkFalse(MetricConditionReady, reason, message)
 }
 
-// IsReady looks at the conditions and if the condition MetricConditionReady
-// is true
-func (ms *MetricStatus) IsReady() bool {
-	return condSet.Manage(ms.duck()).IsHappy()
-}
-
-func (ms *MetricStatus) duck() *duckv1.Status {
-	return (*duckv1.Status)(&ms.Status)
+// IsReady returns true if the Status condition MetricConditionReady
+// is true and the latest spec has been observed.
+func (m *Metric) IsReady() bool {
+	ms := m.Status
+	return ms.ObservedGeneration == m.Generation &&
+		ms.GetCondition(MetricConditionReady).IsTrue()
 }

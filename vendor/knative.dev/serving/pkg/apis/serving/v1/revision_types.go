@@ -1,5 +1,5 @@
 /*
-Copyright 2019 The Knative Authors.
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import (
 )
 
 // +genclient
+// +genreconciler
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // Revision is an immutable snapshot of code and configuration.  A revision
@@ -55,6 +56,9 @@ var (
 
 	// Check that we can create OwnerReferences to a Revision.
 	_ kmeta.OwnerRefable = (*Revision)(nil)
+
+	// Check that the type conforms to the duck Knative Resource shape.
+	_ duckv1.KRShaped = (*Revision)(nil)
 )
 
 // RevisionTemplateSpec describes the data a revision should have when created from a template.
@@ -78,9 +82,9 @@ type RevisionSpec struct {
 	// +optional
 	ContainerConcurrency *int64 `json:"containerConcurrency,omitempty"`
 
-	// TimeoutSeconds holds the max duration the instance is allowed for
-	// responding to a request.  If unspecified, a system default will
-	// be provided.
+	// TimeoutSeconds is the maximum duration in seconds that the request routing
+	// layer will wait for a request delivered to a container to begin replying
+	// (send network traffic). If unspecified, a system default will be provided.
 	// +optional
 	TimeoutSeconds *int64 `json:"timeoutSeconds,omitempty"`
 }
@@ -120,6 +124,10 @@ type RevisionStatus struct {
 
 	// ServiceName holds the name of a core Kubernetes Service resource that
 	// load balances over the pods backing this Revision.
+	// Deprecated: revision service name is effectively equal to the revision name,
+	// as per #10540.
+	// 0.23 — stop populating
+	// 0.25 — remove.
 	// +optional
 	ServiceName string `json:"serviceName,omitempty"`
 
@@ -128,12 +136,32 @@ type RevisionStatus struct {
 	// +optional
 	LogURL string `json:"logUrl,omitempty"`
 
-	// ImageDigest holds the resolved digest for the image specified
+	// DeprecatedImageDigest holds the resolved digest for the image specified
 	// within .Spec.Container.Image. The digest is resolved during the creation
 	// of Revision. This field holds the digest value regardless of whether
 	// a tag or digest was originally specified in the Container object. It
 	// may be empty if the image comes from a registry listed to skip resolution.
+	// If multiple containers specified then DeprecatedImageDigest holds the digest
+	// for serving container.
+	// DEPRECATED: Use ContainerStatuses instead.
+	// TODO(savitaashture) Remove deprecatedImageDigest.
+	// ref https://kubernetes.io/docs/reference/using-api/deprecation-policy for deprecation.
 	// +optional
+	DeprecatedImageDigest string `json:"imageDigest,omitempty"`
+
+	// ContainerStatuses is a slice of images present in .Spec.Container[*].Image
+	// to their respective digests and their container name.
+	// The digests are resolved during the creation of Revision.
+	// ContainerStatuses holds the container name and image digests
+	// for both serving and non serving containers.
+	// ref: http://bit.ly/image-digests
+	// +optional
+	ContainerStatuses []ContainerStatus `json:"containerStatuses,omitempty"`
+}
+
+// ContainerStatus holds the information of container name and image digest value
+type ContainerStatus struct {
+	Name        string `json:"name,omitempty"`
 	ImageDigest string `json:"imageDigest,omitempty"`
 }
 
@@ -145,4 +173,9 @@ type RevisionList struct {
 	metav1.ListMeta `json:"metadata"`
 
 	Items []Revision `json:"items"`
+}
+
+// GetStatus retrieves the status of the Revision. Implements the KRShaped interface.
+func (t *Revision) GetStatus() *duckv1.Status {
+	return &t.Status.Status
 }

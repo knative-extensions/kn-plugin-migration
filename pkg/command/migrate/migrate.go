@@ -15,6 +15,7 @@
 package migrate
 
 import (
+	"context"
 	"fmt"
 	"os"
 
@@ -28,7 +29,7 @@ import (
 	clientset "k8s.io/client-go/kubernetes"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/oidc" // from https://github.com/kubernetes/client-go/issues/345
 	"k8s.io/client-go/tools/clientcmd"
-	"knative.dev/client-contrib/plugins/migration/pkg/command"
+	"knative.dev/kn-plugin-migration/pkg/command"
 	serving_v1_api "knative.dev/serving/pkg/apis/serving/v1"
 	serving_v1_client "knative.dev/serving/pkg/client/clientset/versioned/typed/serving/v1"
 )
@@ -215,7 +216,7 @@ func getClients(kubeConfig, namespace string) (*kubernetes.Clientset, command.Mi
 
 func getOrCreateNamespace(clientSet *kubernetes.Clientset, namespace string) error {
 	namespaceExists := true
-	_, err := clientSet.CoreV1().Namespaces().Get(namespace, metav1.GetOptions{})
+	_, err := clientSet.CoreV1().Namespaces().Get(context.TODO(), namespace, metav1.GetOptions{})
 	if api_errors.IsNotFound(err) {
 		namespaceExists = false
 	}
@@ -226,7 +227,7 @@ func getOrCreateNamespace(clientSet *kubernetes.Clientset, namespace string) err
 	if !namespaceExists {
 		fmt.Println("Create namespace", color.BlueString(migrateFlags.Namespace), "in destination cluster")
 		nsSpec := &apiv1.Namespace{ObjectMeta: metav1.ObjectMeta{Name: namespace}}
-		_, err := clientSet.CoreV1().Namespaces().Create(nsSpec)
+		_, err := clientSet.CoreV1().Namespaces().Create(context.TODO(), nsSpec, metav1.CreateOptions{})
 		if err != nil {
 			return err
 		}
