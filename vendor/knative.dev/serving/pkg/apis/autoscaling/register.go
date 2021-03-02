@@ -19,10 +19,12 @@ package autoscaling
 import "time"
 
 const (
-	// The internal autoscaling group name. This is used for CRDs.
+	domain = ".knative.dev"
+
+	// InternalGroupName is the internal autoscaling group name. This is used for CRDs.
 	InternalGroupName = "autoscaling.internal.knative.dev"
 
-	// The public autoscaling group name. This is used for annotations, labels, etc.
+	// GroupName is the the public autoscaling group name. This is used for annotations, labels, etc.
 	GroupName = "autoscaling.knative.dev"
 
 	// ClassAnnotationKey is the annotation for the explicit class of autoscaler
@@ -44,6 +46,14 @@ const (
 	//   autoscaling.knative.dev/maxScale: "10"
 	MaxScaleAnnotationKey = GroupName + "/maxScale"
 
+	// InitialScaleAnnotationKey is the annotation to specify the initial scale of
+	// a revision when a service is initially deployed. This number can be set to 0 iff
+	// allow-zero-initial-scale of config-autoscaler is true.
+	InitialScaleAnnotationKey = GroupName + "/initialScale"
+
+	// ScaleDownDelayAnnotationKey is the annotation to specify a scale down delay.
+	ScaleDownDelayAnnotationKey = GroupName + "/scaleDownDelay"
+
 	// MetricAnnotationKey is the annotation to specify what metric the PodAutoscaler
 	// should be scaled on. For example,
 	//   autoscaling.knative.dev/metric: cpu
@@ -60,9 +70,18 @@ const (
 	//   autoscaling.knative.dev/metric: cpu
 	//   autoscaling.knative.dev/target: "75"   # target 75% cpu utilization
 	TargetAnnotationKey = GroupName + "/target"
-	// TargetMin is the minimum allowable target. Values less than
-	// zero don't make sense.
-	TargetMin = 1
+	// TargetMin is the minimum allowable target.
+	// This can be less than 1 due to the fact that with small container
+	// concurrencies and small target utilization values this can get
+	// below 1.
+	TargetMin = 0.01
+
+	// ScaleToZeroPodRetentionPeriodKey is the annotation to specify the minimum
+	// time duration the last pod will not be scaled down, after autoscaler has
+	// made the decision to scale to 0.
+	// This is the per-revision setting compliment to the
+	// scale-to-zero-pod-retention-period global setting.
+	ScaleToZeroPodRetentionPeriodKey = GroupName + "/scaleToZeroPodRetentionPeriod"
 
 	// WindowAnnotationKey is the annotation to specify the time
 	// interval over which to calculate the average metric.  Larger
@@ -81,7 +100,7 @@ const (
 	// isn't going to work well.
 	WindowMin = 6 * time.Second
 	// WindowMax is the maximum permitted stable autoscaling window.
-	// This keeps the event horizon to a resonable enough limit.
+	// This keeps the event horizon to a reasonable enough limit.
 	WindowMax = 1 * time.Hour
 
 	// TargetUtilizationPercentageKey is the annotation which specifies the
@@ -153,13 +172,4 @@ const (
 	// PanicThresholdPercentageMax is the counterpart to the PanicThresholdPercentageMin
 	// but bounding from above.
 	PanicThresholdPercentageMax = 1000.0
-
-	// KPALabelKey is the label key attached to a K8s Service to hint to the KPA
-	// which services/endpoints should trigger reconciles.
-	KPALabelKey = GroupName + "/kpa"
-
-	// PreferForScaleDownLabel is the label key set on a pod which is selected
-	// by the autoscaler as a candidate for removal. Once the label is set to "true", it
-	// signals the QueueProxy to fail readiness on the pod
-	PreferForScaleDownLabelKey = GroupName + "/prefer-for-scale-down"
 )

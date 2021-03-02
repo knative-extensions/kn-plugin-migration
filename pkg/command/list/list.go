@@ -21,7 +21,7 @@ import (
 	"github.com/spf13/cobra"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/oidc" // from https://github.com/kubernetes/client-go/issues/345
 	"k8s.io/client-go/tools/clientcmd"
-	"knative.dev/client-contrib/plugins/migration/pkg/command"
+	"knative.dev/kn-plugin-migration/pkg/command"
 	servingv1client "knative.dev/serving/pkg/client/clientset/versioned/typed/serving/v1"
 )
 

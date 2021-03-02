@@ -15,6 +15,7 @@
 package command
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/fatih/color"
@@ -110,7 +111,7 @@ func (mc *migrationClient) BuildRevision(originalrevision serving_v1_api.Revisio
 }
 
 func (mc *migrationClient) ServiceExists(name string) (bool, error) {
-	_, err := mc.client.Services(mc.namespace).Get(name, metav1.GetOptions{})
+	_, err := mc.client.Services(mc.namespace).Get(context.TODO(), name, metav1.GetOptions{})
 	if api_errors.IsNotFound(err) {
 		return false, nil
 	}
@@ -121,7 +122,7 @@ func (mc *migrationClient) ServiceExists(name string) (bool, error) {
 }
 
 func (mc *migrationClient) GetConfig(name string) (*serving_v1_api.Configuration, error) {
-	config, err := mc.client.Configurations(mc.namespace).Get(name, metav1.GetOptions{})
+	config, err := mc.client.Configurations(mc.namespace).Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -129,7 +130,7 @@ func (mc *migrationClient) GetConfig(name string) (*serving_v1_api.Configuration
 }
 
 func (mc *migrationClient) GetService(name string) (*serving_v1_api.Service, error) {
-	service, err := mc.client.Services(mc.namespace).Get(name, metav1.GetOptions{})
+	service, err := mc.client.Services(mc.namespace).Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -137,7 +138,7 @@ func (mc *migrationClient) GetService(name string) (*serving_v1_api.Service, err
 }
 
 func (mc *migrationClient) ListService() (*serving_v1_api.ServiceList, error) {
-	servicelist, err := mc.client.Services(mc.namespace).List(metav1.ListOptions{})
+	servicelist, err := mc.client.Services(mc.namespace).List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -146,7 +147,7 @@ func (mc *migrationClient) ListService() (*serving_v1_api.ServiceList, error) {
 
 func (mc *migrationClient) CreateService(service *serving_v1_api.Service) (*serving_v1_api.Service, error) {
 	newserivce := mc.ConstructService(*service)
-	service, err := mc.client.Services(mc.namespace).Create(newserivce)
+	service, err := mc.client.Services(mc.namespace).Create(context.TODO(), newserivce, metav1.CreateOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -154,7 +155,7 @@ func (mc *migrationClient) CreateService(service *serving_v1_api.Service) (*serv
 }
 
 func (mc *migrationClient) DeleteService(name string) error {
-	err := mc.client.Services(mc.namespace).Delete(name, &metav1.DeleteOptions{})
+	err := mc.client.Services(mc.namespace).Delete(context.TODO(), name, metav1.DeleteOptions{})
 	if err != nil {
 		return err
 	}
@@ -162,7 +163,7 @@ func (mc *migrationClient) DeleteService(name string) error {
 }
 
 func (mc *migrationClient) GetRevision(name string) (*serving_v1_api.Revision, error) {
-	revision, err := mc.client.Revisions(mc.namespace).Get(name, metav1.GetOptions{})
+	revision, err := mc.client.Revisions(mc.namespace).Get(context.TODO(), name, metav1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -171,7 +172,7 @@ func (mc *migrationClient) GetRevision(name string) (*serving_v1_api.Revision, e
 
 func (mc *migrationClient) CreateRevision(revision *serving_v1_api.Revision, config_uuid types.UID) (*serving_v1_api.Revision, error) {
 	newrevision := mc.BuildRevision(*revision, config_uuid)
-	revision, err := mc.client.Revisions(mc.namespace).Create(newrevision)
+	revision, err := mc.client.Revisions(mc.namespace).Create(context.TODO(), newrevision, metav1.CreateOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -179,7 +180,7 @@ func (mc *migrationClient) CreateRevision(revision *serving_v1_api.Revision, con
 }
 
 func (mc *migrationClient) UpdateRevision(revision *serving_v1_api.Revision) error {
-	_, err := mc.client.Revisions(mc.namespace).Update(revision)
+	_, err := mc.client.Revisions(mc.namespace).Update(context.TODO(), revision, metav1.UpdateOptions{})
 	if err != nil {
 		return err
 	}
@@ -187,7 +188,7 @@ func (mc *migrationClient) UpdateRevision(revision *serving_v1_api.Revision) err
 }
 
 func (mc *migrationClient) ListRevisionByService(name string) (*serving_v1_api.RevisionList, error) {
-	revisions, err := mc.client.Revisions(mc.namespace).List(metav1.ListOptions{LabelSelector: api_serving.ServiceLabelKey + "=" + name})
+	revisions, err := mc.client.Revisions(mc.namespace).List(context.TODO(), metav1.ListOptions{LabelSelector: api_serving.ServiceLabelKey + "=" + name})
 	if err != nil {
 		return nil, err
 	}
@@ -204,7 +205,7 @@ func (mc *migrationClient) PrintServiceWithRevisions(clustername string) error {
 	for i := 0; i < len(services.Items); i++ {
 		service := services.Items[i]
 		color.Cyan("%-25s%-30s%-20s\n", "Name", "Current Revision", "Ready")
-		fmt.Printf("%-25s%-30s%-20s\n", service.Name, service.Status.LatestReadyRevisionName, fmt.Sprint(service.Status.IsReady()))
+		fmt.Printf("%-25s%-30s%-20s\n", service.Name, service.Status.LatestReadyRevisionName, fmt.Sprint(service.IsReady()))
 
 		revisions_s, err := mc.ListRevisionByService(service.Name)
 		if err != nil {
@@ -212,7 +213,7 @@ func (mc *migrationClient) PrintServiceWithRevisions(clustername string) error {
 		}
 		for i := 0; i < len(revisions_s.Items); i++ {
 			revision_s := revisions_s.Items[i]
-			fmt.Println("  |- Revision", revision_s.Name, "( Generation: "+fmt.Sprint(revision_s.Labels["serving.knative.dev/configurationGeneration"]), ", Ready:", revision_s.Status.IsReady(), ")")
+			fmt.Println("  |- Revision", revision_s.Name, "( Generation: "+fmt.Sprint(revision_s.Labels["serving.knative.dev/configurationGeneration"]), ", Ready:", revision_s.IsReady(), ")")
 		}
 		fmt.Println("")
 	}

@@ -1,5 +1,5 @@
 /*
-Copyright 2019 The Knative Authors.
+Copyright 2019 The Knative Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,12 +23,12 @@ import (
 	"knative.dev/pkg/apis"
 )
 
-// ConvertUp implements apis.Convertible
-func (source *Service) ConvertUp(ctx context.Context, sink apis.Convertible) error {
+// ConvertTo implements apis.Convertible
+func (source *Service) ConvertTo(_ context.Context, sink apis.Convertible) error {
 	return fmt.Errorf("v1 is the highest known version, got: %T", sink)
 }
 
-// ConvertDown implements apis.Convertible
-func (sink *Service) ConvertDown(ctx context.Context, source apis.Convertible) error {
+// ConvertFrom implements apis.Convertible
+func (sink *Service) ConvertFrom(_ context.Context, source apis.Convertible) error {
 	return fmt.Errorf("v1 is the highest known version, got: %T", source)
 }
