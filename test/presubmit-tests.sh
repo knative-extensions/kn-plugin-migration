@@ -26,7 +26,10 @@ export DISABLE_MD_LINK_CHECK=1
 export PRESUBMIT_TEST_FAIL_FAST=1
 export GO111MODULE=on
 set -x
-source $(dirname $0)/../../../scripts/test-infra/presubmit-tests.sh
+export KNATIVE_SERVING_VERSION=${KNATIVE_SERVING_VERSION:-latest}
+export KNATIVE_EVENTING_VERSION=${KNATIVE_EVENTING_VERSION:-latest}
+
+source $(dirname $0)/../vendor/knative.dev/hack/presubmit-tests.sh
 
 # Run cross platform build to ensure kn compiles for Linux, macOS and Windows
 function post_build_tests() {

@@ -347,6 +347,9 @@ k8s.io/klog/v2
 k8s.io/utils/buffer
 k8s.io/utils/integer
 k8s.io/utils/trace
+# knative.dev/hack v0.0.0-20210203173706-8368e1f6eacf
+## explicit
+knative.dev/hack
 # knative.dev/networking v0.0.0-20210215030235-088986a1c2a3
 knative.dev/networking/pkg
 knative.dev/networking/pkg/apis/networking
