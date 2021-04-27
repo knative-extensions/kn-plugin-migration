@@ -1,4 +1,9 @@
 approvers:
-- zhangtbj
-- wg-leads
-- toc
+- technical-oversight-committee
+- knative-release-leads
+- client-writers
+- kn-plugin-migration-approvers
+
+reviewers:
+- client-writers
+- kn-plugin-migration-approvers
