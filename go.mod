@@ -5,12 +5,12 @@ go 1.15
 require (
 	github.com/fatih/color v1.10.0
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/spf13/cobra v1.1.3
-	github.com/spf13/viper v1.7.1
+	github.com/spf13/cobra v1.2.1
+	github.com/spf13/viper v1.8.1
 	gotest.tools v2.2.0+incompatible
-	k8s.io/api v0.19.7
-	k8s.io/apimachinery v0.19.7
-	k8s.io/client-go v0.19.7
-	knative.dev/hack v0.0.0-20210325223819-b6ab329907d3
-	knative.dev/serving v0.22.0
+	k8s.io/api v0.21.4
+	k8s.io/apimachinery v0.21.4
+	k8s.io/client-go v0.21.4
+	knative.dev/hack v0.0.0-20211015200324-86876688e735
+	knative.dev/serving v0.26.1-0.20211016013324-e5d8560f950c
 )
