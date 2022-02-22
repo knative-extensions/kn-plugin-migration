@@ -396,7 +396,7 @@ k8s.io/klog/v2
 k8s.io/utils/buffer
 k8s.io/utils/integer
 k8s.io/utils/trace
-# knative.dev/hack v0.0.0-20220216040439-0456e8bf6547
+# knative.dev/hack v0.0.0-20220218190734-a8ef7b67feec
 ## explicit
 knative.dev/hack
 # knative.dev/networking v0.0.0-20220217013411-48ac02ff5975
@@ -415,7 +415,7 @@ knative.dev/pkg/network
 knative.dev/pkg/profiling
 knative.dev/pkg/ptr
 knative.dev/pkg/tracker
-# knative.dev/serving v0.29.1-0.20220217223834-b28062cdc4c7
+# knative.dev/serving v0.29.1-0.20220222071103-c1aaaf61a483
 ## explicit
 knative.dev/serving/pkg/apis/autoscaling
 knative.dev/serving/pkg/apis/autoscaling/v1alpha1
