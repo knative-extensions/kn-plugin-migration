@@ -4,13 +4,15 @@ go 1.15
 
 require (
 	github.com/fatih/color v1.13.0
+	github.com/google/go-containerregistry v0.8.1-0.20220219142810-1571d7fdc46e // indirect
 	github.com/mitchellh/go-homedir v1.1.0
+	github.com/spf13/afero v1.8.0 // indirect
 	github.com/spf13/cobra v1.3.0
 	github.com/spf13/viper v1.10.1
 	gotest.tools v2.2.0+incompatible
 	k8s.io/api v0.23.5
 	k8s.io/apimachinery v0.23.5
 	k8s.io/client-go v0.23.5
-	knative.dev/hack v0.0.0-20220331040044-9c0ea69d9b4d
-	knative.dev/serving v0.30.1-0.20220331035045-b80e92e9d5e3
+	knative.dev/hack v0.0.0-20220411131823-6ffd8417de7c
+	knative.dev/serving v0.30.1-0.20220412021107-5021d8c629ad
 )
