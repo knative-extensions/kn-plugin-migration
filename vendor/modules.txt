@@ -36,9 +36,6 @@ github.com/googleapis/gnostic/compiler
 github.com/googleapis/gnostic/extensions
 github.com/googleapis/gnostic/jsonschema
 github.com/googleapis/gnostic/openapiv2
-# github.com/hashicorp/golang-lru v0.5.4
-github.com/hashicorp/golang-lru
-github.com/hashicorp/golang-lru/simplelru
 # github.com/hashicorp/hcl v1.0.0
 github.com/hashicorp/hcl
 github.com/hashicorp/hcl/hcl/ast
@@ -414,17 +411,19 @@ k8s.io/utils/buffer
 k8s.io/utils/clock
 k8s.io/utils/clock/testing
 k8s.io/utils/integer
+k8s.io/utils/internal/third_party/forked/golang/golang-lru
 k8s.io/utils/internal/third_party/forked/golang/net
+k8s.io/utils/lru
 k8s.io/utils/net
 k8s.io/utils/trace
-# knative.dev/hack v0.0.0-20220505013956-ccf82ad03f32
+# knative.dev/hack v0.0.0-20220524153203-12d3e2a7addc
 ## explicit
 knative.dev/hack
-# knative.dev/networking v0.0.0-20220504043559-8d5dcbeeea2a
-knative.dev/networking/pkg
+# knative.dev/networking v0.0.0-20220524205304-22d1b933cf73
 knative.dev/networking/pkg/apis/networking
 knative.dev/networking/pkg/apis/networking/v1alpha1
-# knative.dev/pkg v0.0.0-20220504135159-0719b405eca5
+knative.dev/networking/pkg/config
+# knative.dev/pkg v0.0.0-20220524202603-19adf798efb8
 knative.dev/pkg/apis
 knative.dev/pkg/apis/duck
 knative.dev/pkg/apis/duck/ducktypes
@@ -440,7 +439,7 @@ knative.dev/pkg/network
 knative.dev/pkg/profiling
 knative.dev/pkg/ptr
 knative.dev/pkg/tracker
-# knative.dev/serving v0.31.1-0.20220505032827-18da4c0f0f2e
+# knative.dev/serving v0.32.0
 ## explicit
 knative.dev/serving/pkg/apis/autoscaling
 knative.dev/serving/pkg/apis/autoscaling/v1alpha1
