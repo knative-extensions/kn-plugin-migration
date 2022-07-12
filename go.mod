@@ -9,9 +9,9 @@ require (
 	github.com/spf13/cobra v1.3.0
 	github.com/spf13/viper v1.10.1
 	gotest.tools v2.2.0+incompatible
-	k8s.io/api v0.23.5
-	k8s.io/apimachinery v0.23.5
-	k8s.io/client-go v0.23.5
-	knative.dev/hack v0.0.0-20220610014127-dc6c287516dc
-	knative.dev/serving v0.32.1-0.20220624142925-6eccc36f1d78
+	k8s.io/api v0.23.8
+	k8s.io/apimachinery v0.23.8
+	k8s.io/client-go v0.23.8
+	knative.dev/hack v0.0.0-20220701014203-65c463ac8c98
+	knative.dev/serving v0.32.1-0.20220712154819-67347fe4eac5
 )
