@@ -208,6 +208,9 @@ func PodSpecMask(ctx context.Context, in *corev1.PodSpec) *corev1.PodSpec {
 	}
 	if cfg.Features.PodSpecSecurityContext != config.Disabled {
 		out.SecurityContext = in.SecurityContext
+	} else if cfg.Features.SecurePodDefaults != config.Disabled {
+		// This is further validated in ValidatePodSecurityContext.
+		out.SecurityContext = in.SecurityContext
 	}
 	if cfg.Features.PodSpecPriorityClassName != config.Disabled {
 		out.PriorityClassName = in.PriorityClassName
@@ -591,6 +594,19 @@ func PodSecurityContextMask(ctx context.Context, in *corev1.PodSecurityContext) 
 
 	out := new(corev1.PodSecurityContext)
 
+	if config.FromContextOrDefaults(ctx).Features.SecurePodDefaults == config.Enabled {
+		// Allow to opt out of more-secure defaults if SecurePodDefaults is enabled.
+		// This aligns with defaultSecurityContext in revision_defaults.go.
+		if in.SeccompProfile != nil {
+			seccomp := in.SeccompProfile.Type
+			if seccomp == corev1.SeccompProfileTypeRuntimeDefault || seccomp == corev1.SeccompProfileTypeUnconfined {
+				out.SeccompProfile = &corev1.SeccompProfile{
+					Type: seccomp,
+				}
+			}
+		}
+	}
+
 	if config.FromContextOrDefaults(ctx).Features.PodSpecSecurityContext == config.Disabled {
 		return out
 	}
@@ -600,12 +616,14 @@ func PodSecurityContextMask(ctx context.Context, in *corev1.PodSecurityContext) 
 	out.RunAsNonRoot = in.RunAsNonRoot
 	out.FSGroup = in.FSGroup
 	out.SupplementalGroups = in.SupplementalGroups
+	out.SeccompProfile = in.SeccompProfile
 
 	// Disallowed
 	// This list is unnecessary, but added here for clarity
 	out.SELinuxOptions = nil
 	out.WindowsOptions = nil
 	out.Sysctls = nil
+	out.FSGroupChangePolicy = nil
 
 	return out
 }
@@ -628,12 +646,17 @@ func SecurityContextMask(ctx context.Context, in *corev1.SecurityContext) *corev
 	// RunAsNonRoot when unset behaves the same way as false
 	// We do want the ability for folks to set this value to true
 	out.RunAsNonRoot = in.RunAsNonRoot
+	// AllowPrivilegeEscalation when unset can behave the same way as true
+	// We do want the ability for folks to set this value to false
+	out.AllowPrivilegeEscalation = in.AllowPrivilegeEscalation
+	// SeccompProfile defaults to "unconstrained", but the safe values are
+	// "RuntimeDefault" or "Localhost" (with localhost path set)
+	out.SeccompProfile = in.SeccompProfile
 
 	// Disallowed
 	// This list is unnecessary, but added here for clarity
 	out.Privileged = nil
 	out.SELinuxOptions = nil
-	out.AllowPrivilegeEscalation = nil
 	out.ProcMount = nil
 
 	return out
