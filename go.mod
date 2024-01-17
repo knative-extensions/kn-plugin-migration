@@ -2,8 +2,6 @@ module knative.dev/kn-plugin-migration
 
 go 1.21
 
-toolchain go1.21.6
-
 require (
 	github.com/fatih/color v1.13.0
 	github.com/mitchellh/go-homedir v1.1.0
