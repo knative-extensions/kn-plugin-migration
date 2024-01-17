@@ -46,6 +46,9 @@ const (
 
 	// DryRunFeatureKey gates the podspec dryrun feature and runs with the value 'enabled'
 	DryRunFeatureKey = "features.knative.dev/podspec-dryrun"
+
+	// AllowHTTPFullDuplexFeatureKey gates the use of http1 full duplex per workload
+	AllowHTTPFullDuplexFeatureKey = "features.knative.dev/http-full-duplex"
 )
 
 func defaultFeaturesConfig() *Features {
@@ -59,6 +62,7 @@ func defaultFeaturesConfig() *Features {
 		PodSpecNodeSelector:              Disabled,
 		PodSpecRuntimeClassName:          Disabled,
 		PodSpecSecurityContext:           Disabled,
+		PodSpecShareProcessNamespace:     Disabled,
 		PodSpecPriorityClassName:         Disabled,
 		PodSpecSchedulerName:             Disabled,
 		ContainerSpecAddCapabilities:     Disabled,
@@ -67,6 +71,7 @@ func defaultFeaturesConfig() *Features {
 		PodSpecPersistentVolumeClaim:     Disabled,
 		PodSpecPersistentVolumeWrite:     Disabled,
 		QueueProxyMountPodInfo:           Disabled,
+		QueueProxyResourceDefaults:       Disabled,
 		PodSpecInitContainers:            Disabled,
 		PodSpecDNSPolicy:                 Disabled,
 		PodSpecDNSConfig:                 Disabled,
@@ -90,6 +95,7 @@ func NewFeaturesConfigFromMap(data map[string]string) (*Features, error) {
 		asFlag("kubernetes.podspec-nodeselector", &nc.PodSpecNodeSelector),
 		asFlag("kubernetes.podspec-runtimeclassname", &nc.PodSpecRuntimeClassName),
 		asFlag("kubernetes.podspec-securitycontext", &nc.PodSpecSecurityContext),
+		asFlag("kubernetes.podspec-shareprocessnamespace", &nc.PodSpecShareProcessNamespace),
 		asFlag("kubernetes.podspec-priorityclassname", &nc.PodSpecPriorityClassName),
 		asFlag("kubernetes.podspec-schedulername", &nc.PodSpecSchedulerName),
 		asFlag("kubernetes.containerspec-addcapabilities", &nc.ContainerSpecAddCapabilities),
@@ -102,6 +108,7 @@ func NewFeaturesConfigFromMap(data map[string]string) (*Features, error) {
 		asFlag("kubernetes.podspec-dnsconfig", &nc.PodSpecDNSConfig),
 		asFlag("secure-pod-defaults", &nc.SecurePodDefaults),
 		asFlag("tag-header-based-routing", &nc.TagHeaderBasedRouting),
+		asFlag("queueproxy.resource-defaults", &nc.QueueProxyResourceDefaults),
 		asFlag("queueproxy.mount-podinfo", &nc.QueueProxyMountPodInfo),
 		asFlag("autodetect-http2", &nc.AutoDetectHTTP2)); err != nil {
 		return nil, err
@@ -125,6 +132,7 @@ type Features struct {
 	PodSpecNodeSelector              Flag
 	PodSpecRuntimeClassName          Flag
 	PodSpecSecurityContext           Flag
+	PodSpecShareProcessNamespace     Flag
 	PodSpecPriorityClassName         Flag
 	PodSpecSchedulerName             Flag
 	ContainerSpecAddCapabilities     Flag
@@ -134,6 +142,7 @@ type Features struct {
 	PodSpecPersistentVolumeClaim     Flag
 	PodSpecPersistentVolumeWrite     Flag
 	QueueProxyMountPodInfo           Flag
+	QueueProxyResourceDefaults       Flag
 	PodSpecDNSPolicy                 Flag
 	PodSpecDNSConfig                 Flag
 	SecurePodDefaults                Flag
