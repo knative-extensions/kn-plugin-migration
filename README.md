@@ -61,6 +61,7 @@ Available Commands:
 ### Step 1 Execute migrate command
 
 ![Step 1 Execute migrate command](docs/step1.png)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fknative-extensions%2Fkn-plugin-migration.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fknative-extensions%2Fkn-plugin-migration?ref=badge_shield)
 
 ### Step 2 Migrate first service with revisions
 
@@ -73,3 +74,7 @@ Available Commands:
 ### Step 4 Clean kn resources with --delete
 
 ![Step 4 Clean kn resources with --delete](docs/step4.png)
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fknative-extensions%2Fkn-plugin-migration.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fknative-extensions%2Fkn-plugin-migration?ref=badge_large)
